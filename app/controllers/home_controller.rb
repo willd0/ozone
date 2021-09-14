@@ -2,8 +2,8 @@ class HomeController < ApplicationController
   def index
     require 'net/http'
     require 'json'
-    require_relative '../.api_key.rb'
-    @url = 'https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=75070&distance=0&API_KEY=#{$api_key}'
+    require '/railsfriends/ozone/.api_key.rb'
+    @url = 'https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=75070&distance=0&API_KEY='+ $api_key
     @uri = URI(@url)
     @response = Net::HTTP.get(@uri)
     @output = JSON.parse(@response)

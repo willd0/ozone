@@ -9,6 +9,36 @@
         <p>
           Hit "Reload" in your web browser to update the reading...
         </p>
+        <div id='map' style='width: 400px; height: 300px;'></div>
+        <script>
+          mapboxgl.accessToken = access_token;
+          navigator.geolocation.getCurrentPosition(successLocation, errorLocation, { enableHighAccuracy: true })
+
+          function successLocation(position) {
+            setupMap([position.coords.longitude, position.coords.latitude])
+          }
+
+          function errorLocation() {
+            setupMap([-2.24, 53.48])
+          }
+
+          function setupMap(center) {
+            const map = new mapboxgl.Map({
+              container: 'map', // container ID
+              style: 'mapbox://styles/mapbox/streets-v11', // style URL
+              center: center, // starting position [lng, lat]
+              zoom: 9 // starting zoom
+          })
+            const nav = new mapboxgl.NavigationControl();
+            map.addControl(nav);
+
+            const marker = new mapboxgl.Marker({
+              color: "<%= @api_color %>"
+            })
+            .setLngLat(center)
+            .addTo(map);
+          }
+        </script>
         <br/>
       </div>
     </div>

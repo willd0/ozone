@@ -10,8 +10,17 @@
           Hit "Reload" in your web browser to update the reading...
         </p>
         <div id='map' style='width: 400px; height: 300px;'></div>
+       
         <script>
+          fetch('https://www.airnowapi.org/aq/forecast/latLong/?format=application/json&latitude=39.0509&longitude=-121.4453&date=2021-09-14&distance=25&API_KEY=' + '<%= $api_key %>')
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+              
+            })
+
           mapboxgl.accessToken = access_token;
+
           navigator.geolocation.getCurrentPosition(successLocation, errorLocation, { enableHighAccuracy: true })
 
           function successLocation(position) {
@@ -31,12 +40,30 @@
           })
             const nav = new mapboxgl.NavigationControl();
             map.addControl(nav);
-
+                
             const marker = new mapboxgl.Marker({
-              color: "<%= @api_color %>"
+              color: "<%= @api_color %>",
+              draggable: true
+              
             })
             .setLngLat(center)
             .addTo(map);
+    
+            marker.on('dragend', onDragEnd);
+
+            function onDragEnd() {
+              var lngLat = marker.getLngLat();
+              const coordinates = [lngLat.lng, lngLat.lat]
+              console.log('Longitude: ' + lngLat.lng + ' Latitude: ' + lngLat.lat);
+              map.flyTo ({
+                center: [
+                  lngLat.lng,
+                  lngLat.lat
+                ],
+                essential: false
+              });
+
+            }
           }
         </script>
         <br/>

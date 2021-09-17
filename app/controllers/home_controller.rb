@@ -3,7 +3,7 @@ class HomeController < ApplicationController
     require 'net/http'
     require 'json'
     require '/railsfriends/ozone/.api_key.rb'
-    @url = 'https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=75070&distance=0&API_KEY='+ $api_key
+    @url = 'https://www.airnowapi.org/aq/forecast/latLong/?format=application/json&latitude=39.0509&longitude=-121.4453&date=2021-09-14&distance=25&API_KEY='+ $api_key
     @uri = URI(@url)
     @response = Net::HTTP.get(@uri)
     @output = JSON.parse(@response)

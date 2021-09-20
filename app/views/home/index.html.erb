@@ -1,12 +1,10 @@
-<div class="p-5 mb-4 <%= @api_color %> rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">
-          <%= @final_output %>
-        </h1>
-        <p class="col-md-8 fs-4">
-          This is the current ozone air quality readout for the selected location.
-        </p>
-        <div id='map' style='width: 400px; height: 300px;'></div>
+  <div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+          <h2 align=center>Hello! Welcome to My Ozone!</h2>
+        <h6 align=center>Move the marker to display the current ozone air quality for the selected location.</p>
+          <br/>
+        <div id='map' style='width: 800px; height: 600px;'></div>
        
         <script>
           mapboxgl.accessToken = access_token;
@@ -94,10 +92,6 @@
                     aqiColor = "purple";
                     changeMarker(aqiColor, lngLat);
                     
-                  } else if (final_output >= 6) {
-                    aqiColor = "maroon";
-                    changeMarker(aqiColor, lngLat);
-                    
                   } else {
                     aqiColor = "silver";
                     changeMarker(aqiColor, lngLat);
@@ -132,7 +126,56 @@
             
           }
         </script>
-        <br/>
       </div>
-    </div>
+<div class="col-md-auto">
+<br/>
+<br/>
+<br/>
+<br/>
+<table class="table">
+  <thead class="table-dark">
+    <tr>
+      <th>Air Quality Index</th>
+    </tr>
+  </thead>
+
+  <tbody>
+      <tr class="green">
+        <td>
+         Good
+        </td>
+      </tr>
+      <tr class="yellow">
+        <td>
+         Fair
+        </td>
+      </tr>
+      <tr class="orange">
+        <td>
+         Moderate
+        </td>
+      </tr>
+      <tr class="red">
+        <td>
+         Poor
+        </td>
+      </tr>
+      <tr class="purple">
+        <td>
+         Very Poor
+        </td>
+      </tr>
+      <tr class="silver">
+        <td>
+         No Data Available
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+
+        <br/>
+      
     <br/>

@@ -33,16 +33,16 @@
             map.addControl(nav);
 
             const marker = new mapboxgl.Marker({
-              color: "blue",
               draggable: true,
               
             })
             .setLngLat(center)
             .addTo(map);
+
             var currentmarker = marker;
             var lLat = currentmarker.getLngLat();
             var c = map.getCenter();
-            console.log(c);
+            var aqiColor = "silver";
             fetch('http://api.openweathermap.org/data/2.5/air_pollution?lat=' + c.lat + '&lon=' + c.lng + '&appid=api_key')
               .then(response => response.json())
               .then(data => {
@@ -51,89 +51,52 @@
               });
             marker.on('dragend', onDragEnd);
             
-
-            function checkAQI(final_output, lngLat) {
-              if (final_output == undefined) {
-                    color: "silver"
-                  } else if (final_output == 1) {
-                    currentmarker.remove();
-                    const marker2 = new mapboxgl.Marker({
-                      color: "green",
+            function changeMarker(aqiColor, lngLat) {
+              currentmarker.remove();
+              const marker2 = new mapboxgl.Marker({
+                      color: aqiColor,
                       draggable: true,
                       
                     })
                     .setLngLat(lngLat)
                     .addTo(map);
                     currentmarker = marker2;
-                    marker2.on('dragend', onDragEnd);
+                    marker2.on('dragend', onDragEnd);      
+            }
+
+            function checkAQI(final_output, lngLat) {
+                  if (final_output == 1) {
+                    aqiColor = "green";
+                    changeMarker(aqiColor, lngLat);
 
                   } else if (final_output == 2) {
-                    currentmarker.remove();
-                    const marker3 = new mapboxgl.Marker({
-                      color: "yellow",
-                      draggable: true,
-                      
-                    })
-                    .setLngLat(lngLat)
-                    .addTo(map);
-                    currentmarker = marker3;
-                    marker3.on('dragend', onDragEnd);
+                    aqiColor = "yellow";
+                    changeMarker(aqiColor, lngLat);
         
                   } else if (final_output == 3) {
-                    currentmarker.remove();
-                    const marker4 = new mapboxgl.Marker({
-                      color: "orange",
-                      draggable: true,
-                      
-                    })
-                    .setLngLat(lngLat)
-                    .addTo(map);
-                    currentmarker = marker4;
-                    marker4.on('dragend', onDragEnd);
+                    aqiColor = "orange";
+                    changeMarker(aqiColor, lngLat);
                     
                   } else if (final_output == 4) {
-                    currentmarker.remove();
-                    const marker5 = new mapboxgl.Marker({
-                      color: "red",
-                      draggable: true,
-                      
-                    })
-                    .setLngLat(lngLat)
-                    .addTo(map);
-                    currentmarker = marker5;
-                    marker5.on('dragend', onDragEnd);
+                    aqiColor = "red";
+                    changeMarker(aqiColor, lngLat);
                     
                   } else if (final_output == 5) {
-                    currentmarker.remove();
-                    const marker6 = new mapboxgl.Marker({
-                      color: "purple",
-                      draggable: true,
-                      
-                    })
-                    .setLngLat(lngLat)
-                    .addTo(map);
-                    currentmarker = marker6;
-                    marker6.on('dragend', onDragEnd);
+                    aqiColor = "purple";
+                    changeMarker(aqiColor, lngLat);
                     
                   } else if (final_output >= 6) {
-                    currentmarker.remove();
-                    const marker7 = new mapboxgl.Marker({
-                      color: "maroon",
-                      draggable: true,
-                      
-                    })
-                    .setLngLat(lngLat)
-                    .addTo(map);
-                    currentmarker = marker7;
-                    marker7.on('dragend', onDragEnd);
+                    aqiColor = "maroon";
+                    changeMarker(aqiColor, lngLat);
                     
+                  } else {
+                    aqiColor = "silver";
+                    changeMarker(aqiColor, lngLat);
                   }
             }
             
             function onDragEnd() {
               var lngLat = currentmarker.getLngLat();
-              const coordinates = [lngLat.lng, lngLat.lat]
-              console.log('Longitude: ' + lngLat.lng + ' Latitude: ' + lngLat.lat);
               map.flyTo ({
                 center: [
                   lngLat.lng,
@@ -144,7 +107,6 @@
               fetch('http://api.openweathermap.org/data/2.5/air_pollution?lat=' + lngLat.lat + '&lon=' + lngLat.lng + '&appid=api_key')
                 .then(response => response.json())
                 .then(data => {
-                  console.log(data.list[0].main.aqi);
                   var final_output = data.list[0].main.aqi;
                   checkAQI(final_output, lngLat);
 

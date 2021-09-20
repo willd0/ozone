@@ -44,11 +44,20 @@
             var c = map.getCenter();
             var aqiColor = "silver";
             fetch('http://api.openweathermap.org/data/2.5/air_pollution?lat=' + c.lat + '&lon=' + c.lng + '&appid=api_key')
-              .then(response => response.json())
+              .then(response => {
+                if(response.status === 400) {
+                  aqiColor = "silver";
+                  changeMarker(aqiColor, lLat);
+                } else {
+                return response.json();
+                  }
+                })
               .then(data => {
                 var final_out = data.list[0].main.aqi;
                 checkAQI(final_out, lLat);
+
               });
+
             marker.on('dragend', onDragEnd);
             
             function changeMarker(aqiColor, lngLat) {
@@ -105,8 +114,15 @@
                 essential: false
               });
               fetch('http://api.openweathermap.org/data/2.5/air_pollution?lat=' + lngLat.lat + '&lon=' + lngLat.lng + '&appid=api_key')
-                .then(response => response.json())
-                .then(data => {
+                .then(response => {
+                  if(response.status === 400) {
+                    aqiColor = "silver";
+                    changeMarker(aqiColor, lngLat);
+                  } else {
+                  return response.json();
+                    }
+                  })
+                  .then(data => {
                   var final_output = data.list[0].main.aqi;
                   checkAQI(final_output, lngLat);
 

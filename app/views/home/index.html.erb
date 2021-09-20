@@ -4,10 +4,7 @@
           <%= @final_output %>
         </h1>
         <p class="col-md-8 fs-4">
-          This is the current ozone air quality readout for my neighborhood.
-        </p>
-        <p>
-          Hit "Reload" in your web browser to update the reading...
+          This is the current ozone air quality readout for the selected location.
         </p>
         <div id='map' style='width: 400px; height: 300px;'></div>
        
@@ -31,6 +28,7 @@
               center: center, // starting position [lng, lat]
               zoom: 9 // starting zoom
           })
+            
             const nav = new mapboxgl.NavigationControl();
             map.addControl(nav);
 
@@ -42,25 +40,20 @@
             .setLngLat(center)
             .addTo(map);
             var currentmarker = marker;
+            var lLat = currentmarker.getLngLat();
+            var c = map.getCenter();
+            console.log(c);
+            fetch('http://api.openweathermap.org/data/2.5/air_pollution?lat=' + c.lat + '&lon=' + c.lng + '&appid=api_key')
+              .then(response => response.json())
+              .then(data => {
+                var final_out = data.list[0].main.aqi;
+                checkAQI(final_out, lLat);
+              });
             marker.on('dragend', onDragEnd);
             
-            function onDragEnd() {
-              var lngLat = currentmarker.getLngLat();
-              const coordinates = [lngLat.lng, lngLat.lat]
-              console.log('Longitude: ' + lngLat.lng + ' Latitude: ' + lngLat.lat);
-              map.flyTo ({
-                center: [
-                  lngLat.lng,
-                  lngLat.lat
-                ],
-                essential: false
-              });
-              fetch('http://api.openweathermap.org/data/2.5/air_pollution?lat=' + lngLat.lat + '&lon=' + lngLat.lng + '&appid=api_key')
-                .then(response => response.json())
-                .then(data => {
-                  console.log(data.list[0].main.aqi);
-                  var final_output = data.list[0].main.aqi;
-                  if (final_output == "Error") {
+
+            function checkAQI(final_output, lngLat) {
+              if (final_output == undefined) {
                     color: "silver"
                   } else if (final_output == 1) {
                     currentmarker.remove();
@@ -135,6 +128,25 @@
                     marker7.on('dragend', onDragEnd);
                     
                   }
+            }
+            
+            function onDragEnd() {
+              var lngLat = currentmarker.getLngLat();
+              const coordinates = [lngLat.lng, lngLat.lat]
+              console.log('Longitude: ' + lngLat.lng + ' Latitude: ' + lngLat.lat);
+              map.flyTo ({
+                center: [
+                  lngLat.lng,
+                  lngLat.lat
+                ],
+                essential: false
+              });
+              fetch('http://api.openweathermap.org/data/2.5/air_pollution?lat=' + lngLat.lat + '&lon=' + lngLat.lng + '&appid=api_key')
+                .then(response => response.json())
+                .then(data => {
+                  console.log(data.list[0].main.aqi);
+                  var final_output = data.list[0].main.aqi;
+                  checkAQI(final_output, lngLat);
 
                 })
 

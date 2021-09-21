@@ -3,8 +3,8 @@
         <div class="col-md-auto">
           <h2 align=center>Hello! Welcome to My Ozone!</h2>
         <h6 align=center>Move the marker to display the current ozone air quality for the selected location.</p>
-          <br/>
-        <div id='map' style='width: 800px; height: 600px;'></div>
+          
+        <div class="border border-5 border-dark" id='map' style='width: 800px; height: 450px;'></div>
        
         <script>
           mapboxgl.accessToken = access_token;
@@ -22,7 +22,7 @@
           function setupMap(center) {
             const map = new mapboxgl.Map({
               container: 'map', // container ID
-              style: 'mapbox://styles/mapbox/streets-v11', // style URL
+              style: 'mapbox://styles/mapbox/navigation-day-v1', // style URL
               center: center, // starting position [lng, lat]
               zoom: 9 // starting zoom
           })
@@ -132,7 +132,7 @@
 <br/>
 <br/>
 <br/>
-<table class="table">
+<table class="table border border-5 border-dark">
   <thead class="table-dark">
     <tr>
       <th>Air Quality Index</th>
